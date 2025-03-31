@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contador de Actividades</title>
+    <meta charset="UTF-8">
+    <style>
+        .cuadrado {
+            width: 100px;
+            height: 100px;
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .verde { background-color: #4CAF50; }
+        .amarillo { background-color: #FFD700; }
+        .activo { border: 3px solid red; }
+        button { margin: 5px; }
+        .contadores { margin: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Contador de Actividades</h1>
+    <p>Haz clic en cualquiera de las cajas para iniciar/detener la actividad</p>
+    
+    <div class="cuadrado verde" id="videoBox" onclick="toggleActividad('video')">Ver Video</div>
+    <div class="cuadrado amarillo" id="lecturaBox" onclick="toggleActividad('lectura')">Leer Página</div>
+
+    <div class="contadores">
+        <h3>Contadores:</h3>
+        <p>Videos vistos: <span id="contadorVideo">0</span></p>
+        <p>Paginas leidas: <span id="contadorLectura">0</span></p>
+        <p>Tiempo en videos: <span id="tiempoVideo">00:00:00</span></p>
+        <p>Tiempo en lectura: <span id="tiempoLectura">00:00:00</span></p>
+    </div>
+
+    <div>
+        <h3>Reiniciar contadores:</h3>
+        <button onclick="reiniciarContador('video')">Reiniciar contador de videos</button>
+        <button onclick="reiniciarContador('lectura')">Reiniciar contador de paginas</button>
+        <button onclick="reiniciarContador('todos')">Reiniciar todos los contadores</button>
+    </div>
+
+    <script>
+        const actividades = { video: { contador: 0, tiempo: 0, activo: false, intervalo: null }, lectura: { contador: 0, tiempo: 0, activo: false, intervalo: null } };
+        
+        const formatearTiempo = s => `${String(Math.floor(s/3600)).padStart(2,'0')}:${String(Math.floor((s%3600)/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+        
+        const actualizarContador = tipo => {
+            const t = tipo.charAt(0).toUpperCase() + tipo.slice(1);
+            document.getElementById(`contador${t}`).textContent = actividades[tipo].contador;
+            document.getElementById(`tiempo${t}`).textContent = formatearTiempo(actividades[tipo].tiempo);
+        };
+
+        const saveClickDataToBackend = async (clickCount, boxType, timeSpent) => {
+        try {
+            await fetch('http://localhost:5000/api/saveClickCount', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ clickCount, boxType, timeSpent })
+            });
+            console.log(`Datos guardados: Caja ${boxType}, Tiempo: ${timeSpent}s, Clics: ${clickCount}`);
+        } catch (error) {
+            console.error('Error al guardar los datos en el backend:', error);
+        }
+    };
+
+    const toggleActividad = tipo => {
+        const a = actividades[tipo];
+        if (!a.activo) {
+            a.activo = true;
+            document.getElementById(`${tipo}Box`).classList.add('activo');
+            a.intervalo = setInterval(() => { a.tiempo++; actualizarContador(tipo); }, 1000);
+        } else {
+            a.activo = false;
+            document.getElementById(`${tipo}Box`).classList.remove('activo');
+            clearInterval(a.intervalo);
+            a.contador++;
+            actualizarContador(tipo);
+
+            // Guardar los datos en el backend
+            saveClickDataToBackend(a.contador, tipo, a.tiempo);
+
+            console.log(`Has ${tipo === 'video' ? 'visto un video' : 'leído una página'}. Tiempo: ${formatearTiempo(a.tiempo)}`);
+        }
+    };
+
+        const reiniciarContador = tipo => {
+            if (tipo === 'todos') {
+                Object.keys(actividades).forEach(reiniciarContador);
+                console.log('Todos los contadores reiniciados a 0');
+                return;
+            }
+            const a = actividades[tipo];
+            a.contador = a.tiempo = 0;
+            actualizarContador(tipo);
+            if (a.activo) {
+                clearInterval(a.intervalo);
+                a.activo = false;
+                document.getElementById(`${tipo}Box`).classList.remove('activo');
+            }
+            console.log(`Contador de ${tipo === 'video' ? 'videos' : 'páginas'} reiniciado a 0`);
+        };
+    </script>
+</body>
+</html> 
