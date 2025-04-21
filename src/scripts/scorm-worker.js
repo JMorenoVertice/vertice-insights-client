@@ -3,22 +3,66 @@ window.addEventListener("DOMContentLoaded", function () {
     // EXTERNALS SCRIPTS
     function loadScript(url) {
         var script = document.createElement("script");
-        script.src = "./modules/scorm-events.js";
+        script.src = url;
         script.type = "text/javascript";
         script.async = true;
+        script.onload = function () {
+            console.log("Script cargado y ejecutado:", url);
+        };
+        script.onerror = function () {
+            console.error("Error al cargar el script:", url);
+        };
         document.body.appendChild(script);
-        console.log("Script cargado dinámicamente:", script.src);
     }
+    loadScript("./modules/scorm-events.js");
 
     // START SCORM
     console.log("*****DOM completamente cargado.*****");
 
     // VERIFY API
-    if (typeof API === "undefined" || API === null) {
+    var findAPITries = 0;
+
+    function findAPI(win) {
+        while ((win.API == null) && (win.parent != null) && (win.parent != win)) {
+            findAPITries++;
+            if (findAPITries > 7) {
+                alert("Error finding API -- too deeply nested.");
+                return null;
+            }
+            win = win.parent;
+        }
+        return win.API;
+    }
+
+    function getAPI() {
+        var theAPI = findAPI(window);
+        if ((theAPI == null) && (window.opener != null) && (typeof (window.opener) != "undefined")) {
+            theAPI = findAPI(window.opener);
+        }
+        if (theAPI == null) {
+            alert("Unable to find an API adapter");
+        }
+        return theAPI;
+    }
+
+    // USE
+    var API = getAPI();
+    if (!API) {
         console.error("El objeto API no está definido.");
         return;
     } else {
-        console.log("*****El objeto API esta disponible.*****");
+        console.log("*****El objeto API está disponible.*****");
+    }
+
+    // *** INITIALIZE SCORM API ***
+    var initialized = API.LMSInitialize("");
+    if (initialized !== "true") {
+        var err = API.LMSGetLastError();
+        var errStr = API.LMSGetErrorString(err);
+        console.error("Error al inicializar la API SCORM:", errStr);
+        return; // Detén la ejecución si no se inicializa bien
+    } else {
+        console.log("API SCORM inicializada correctamente.");
     }
 
     // USER DATA ANTONELA
@@ -63,6 +107,7 @@ window.addEventListener("DOMContentLoaded", function () {
                 return null;
             }
             console.log("*****Estado de la leccion obtenido:*****", lessonStatus);
+            return lessonStatus;
         } catch (e) {
             console.error("Excepcion en getLessonStatus:", e);
             return null;
@@ -75,7 +120,7 @@ window.addEventListener("DOMContentLoaded", function () {
             console.log("Intentando obtener los datos del dispositivo...");
             var resolution = `${window.screen.width}x${window.screen.height}`;
             var language = navigator.language;
-            var cookies_enabled = cookies_enabled ? "Enabled" : "Disabled";
+            var cookies_enabled = navigator.cookieEnabled ? "Enabled" : "Disabled";
             var timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             var device_memory = navigator.deviceMemory || "Unknown Memory";
             var connection_type = navigator.connection ? navigator.connection.effectiveType : "Unknown Connection";
@@ -110,6 +155,8 @@ window.addEventListener("DOMContentLoaded", function () {
     getDeviceData();
     getLessonStatus();
     getfingerprint();
-    loadScript("./modules/scorm-events.js");
+
+    // *** END SCORM SESSION ***
+    API.LMSFinish("");
 });
 // INTEGRED BY: CORAL
