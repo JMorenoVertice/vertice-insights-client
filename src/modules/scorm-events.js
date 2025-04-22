@@ -1,50 +1,71 @@
 // ALL INTEGRED BY CORAL
 console.log("////////// EVENTS IS CONNECTED AND RUNNING //////////");
 
-// --- VARIABLE GLOBAL PARA EL TIPO DE EJERCICIO ---
+// --- GLOBAL VARIABLE FOR EXERCISE TYPE ---
 window.tipoEjer = null;
 
-// --- SINCRONIZAR EL TIPO DE EJERCICIO EN POPUP ---
-(function syncTipoEjerFromOpener() {
-    try {
-        if (window.opener && typeof window.opener.tipoEjer !== 'undefined') {
-            window.tipoEjer = window.opener.tipoEjer;
-            console.log("Tipo de ejercicio sincronizado desde el padre:", window.tipoEjer);
-        }
-    } catch (e) {
-        window.tipoEjer = 'desconocido';
-    }
-})();
-
-// --- ACTUALIZACIÓN DINÁMICA DEL TIPO DE EJERCICIO EN PRINCIPAL (LINEARSNO.js) ---
-if (typeof hs !== 'undefined' && hs.Expander && hs.Expander.prototype) {
-    const originalOnAfterExpand = hs.Expander.prototype.onAfterExpand;
-    hs.Expander.prototype.onAfterExpand = function() {
-        var src = this.src;
-        var filename = src.split('/').pop();
-        if (filename.startsWith('pest')) {
-            try {
-                if (typeof scoEjerciciosTipo !== 'undefined' && filename) {
-                    const ejercicio = scoEjerciciosTipo.find(ejer => ejer.url === filename);
-                    window.tipoEjer = ejercicio ? ejercicio.tipo : 'desconocido';
-                    if (['generico', 'pilas'].includes(window.tipoEjer)) {
-                        let iframeDoc = this.iframe.contentDocument || this.iframe.contentWindow.document;
-                        let linkCSS = iframeDoc.querySelector('link[href="resources/ejercicioshtml.css"]');
-                        if (linkCSS) linkCSS.href = "resources/ejercicioshtmlv0.css";
-                    }
-                }
-            } catch (error) {
-                window.tipoEjer = 'desconocido';
-            }
-        }
-        if (typeof originalOnAfterExpand === 'function') {
-            originalOnAfterExpand.apply(this, arguments);
-        }
-    };
+// --- Get all data-* attributes from an element as an object ---
+function getDataAttributes(el) {
+    return [...el.attributes]
+        .filter(a => a.name.startsWith('data-'))
+        .reduce((acc, a) => { acc[a.name] = a.value; return acc; }, {});
 }
 
-// --- FUNCIONES AUXILIARES ---
-function logElementAction(context, el, action) {
+// --- Get the parent hierarchy for an element ---
+function getParentStructure(el) {
+    let parents = [];
+    let node = el.parentElement;
+    while (node && node !== document.body) {
+        parents.push({
+            tag: node.tagName,
+            id: node.id,
+            class: node.className,
+            name: node.getAttribute('name'),
+            data: getDataAttributes(node),
+            role: node.getAttribute('role'),
+            ariaLabel: node.getAttribute('aria-label')
+        });
+        node = node.parentElement;
+    }
+    return parents;
+}
+
+// --- Update tipoEjer on click for any exercise element ---
+function updateTipoEjerOnClick(el) {
+    let ejercicioEl = el.closest('[data-ejercicio], [data-tipo], .ejercicio, [data-src], [src]');
+    if (ejercicioEl) {
+        let tipo = ejercicioEl.getAttribute('data-ejercicio') ||
+            ejercicioEl.getAttribute('data-tipo') ||
+            ejercicioEl.getAttribute('data-src') ||
+            ejercicioEl.getAttribute('src') ||
+            (ejercicioEl.classList.contains('ejercicio') ? 'ejercicio' : null);
+        if (tipo && typeof scoEjerciciosTipo !== 'undefined') {
+            let filename = String(tipo).split('/').pop();
+            const ejercicio = scoEjerciciosTipo.find(ejer => ejer.url === filename);
+            window.tipoEjer = ejercicio ? ejercicio.tipo : tipo;
+        } else if (tipo) {
+            window.tipoEjer = tipo;
+        }
+    }
+}
+
+// --- Robust logging with all relevant attributes ---
+function logElementAction(context, el, action = 'Click') {
+    if (action === 'Click') updateTipoEjerOnClick(el);
+
+    // Get iframe width/height if element is iframe or context is IFRAME
+    let iframeInfo = {};
+    if (el.tagName === 'IFRAME') {
+        iframeInfo.iframeWidth = el.offsetWidth || el.width || null;
+        iframeInfo.iframeHeight = el.offsetHeight || el.height || null;
+    } else if (context.startsWith('IFRAME')) {
+        // Try to get the iframe element from parent
+        let iframeEl = window.frameElement;
+        if (iframeEl && iframeEl.tagName === 'IFRAME') {
+            iframeInfo.iframeWidth = iframeEl.offsetWidth || iframeEl.width || null;
+            iframeInfo.iframeHeight = iframeEl.offsetHeight || iframeEl.height || null;
+        }
+    }
     let info = {
         tag: el.tagName,
         id: el.id,
@@ -53,71 +74,107 @@ function logElementAction(context, el, action) {
         title: el.getAttribute('title'),
         text: (el.innerText || el.value || '').trim(),
         type: el.type || undefined,
-        tipoEjer: window.tipoEjer || 'desconocido'
+        value: el.value || undefined,
+        src: el.getAttribute('src'),
+        href: el.getAttribute('href'),
+        alt: el.getAttribute('alt'),
+        placeholder: el.getAttribute('placeholder'),
+        ariaLabel: el.getAttribute('aria-label'),
+        role: el.getAttribute('role'),
+        tabindex: el.getAttribute('tabindex'),
+        checked: typeof el.checked === "boolean" ? el.checked : undefined,
+        disabled: typeof el.disabled === "boolean" ? el.disabled : undefined,
+        readonly: typeof el.readOnly === "boolean" ? el.readOnly : undefined,
+        required: typeof el.required === "boolean" ? el.required : undefined,
+        data: getDataAttributes(el),
+        tipoEjer: window.tipoEjer || 'desconocido',
+        padres: getParentStructure(el),
+        iframeInfo
     };
-    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName)) {
-        info.value = el.value;
-        if (el.type === 'checkbox' || el.type === 'radio') info.checked = el.checked;
-    }
-    console.log(`[${context}] ${action} en:`, info);
+    console.log(`[${context}] ${action} on:`, info);
 }
 
-// --- TRACKING UNIVERSAL ---
-(function universalTracking() {
-    // Detectar contexto
-    let context = 'PADRE';
-    if (window.opener && window.name) context = 'POPUP';
-    if (window !== window.parent && window.frameElement) context = 'IFRAME';
-
-    // Tracking global
-    document.addEventListener('click', e => logElementAction(context, e.target, 'Click'));
-    document.addEventListener('input', e => {
-        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) logElementAction(context, e.target, 'Input');
+// --- Add tracking to any document or container ---
+function addTracking(doc, context) {
+    if (!doc) return;
+    doc.addEventListener('click', e => logElementAction(context, e.target, 'Click'));
+    doc.addEventListener('input', e => {
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName))
+            logElementAction(context, e.target, 'Input');
     });
-    document.addEventListener('change', e => {
-        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) logElementAction(context, e.target, 'Change');
+    doc.addEventListener('change', e => {
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName))
+            logElementAction(context, e.target, 'Change');
     });
+}
 
-    // Tracking específico en #SCOCONTENT si existe
+// --- Tracking in main document and #SCOCONTENT ---
+function initTracking() {
+    addTracking(document, 'PADRE');
     const scoContent = document.getElementById('SCOCONTENT');
-    if (scoContent) {
-        scoContent.addEventListener('click', e => logElementAction(`${context}/#SCOCONTENT`, e.target, 'Click'));
-        scoContent.addEventListener('input', e => {
-            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) logElementAction(`${context}/#SCOCONTENT`, e.target, 'Input');
-        });
-        scoContent.addEventListener('change', e => {
-            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) logElementAction(`${context}/#SCOCONTENT`, e.target, 'Change');
+    if (scoContent) addTracking(scoContent, 'PADRE/#SCOCONTENT');
+    const iframe = document.getElementById('scoFrame');
+    if (iframe) {
+        iframe.addEventListener('load', function () {
+            try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                addTracking(iframeDoc, 'IFRAME');
+                const scoContentIframe = iframeDoc.getElementById('SCOCONTENT');
+                if (scoContentIframe) addTracking(scoContentIframe, 'IFRAME/#SCOCONTENT');
+            } catch (err) {
+                console.warn('Cannot access iframe content (cross-domain?):', err);
+            }
         });
     }
+}
 
-    // Tracking en iframes solo si estamos en documento principal
-    if (context === 'PADRE') {
-        const iframe = document.getElementById('scoFrame');
-        if (iframe) {
-            iframe.addEventListener('load', function() {
-                try {
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    iframeDoc.addEventListener('click', e => logElementAction('IFRAME', e.target, 'Click'));
-                    iframeDoc.addEventListener('input', e => {
-                        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) logElementAction('IFRAME', e.target, 'Input');
-                    });
-                    iframeDoc.addEventListener('change', e => {
-                        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) logElementAction('IFRAME', e.target, 'Change');
-                    });
-                    const scoContentIframe = iframeDoc.getElementById('SCOCONTENT');
-                    if (scoContentIframe) {
-                        scoContentIframe.addEventListener('click', e => logElementAction('IFRAME/#SCOCONTENT', e.target, 'Click'));
-                        scoContentIframe.addEventListener('input', e => {
-                            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) logElementAction('IFRAME/#SCOCONTENT', e.target, 'Input');
-                        });
-                        scoContentIframe.addEventListener('change', e => {
-                            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) logElementAction('IFRAME/#SCOCONTENT', e.target, 'Change');
-                        });
-                    }
-                } catch (err) {}
-            });
+// --- Sync tipoEjer from opener if in popup ---
+function syncTipoEjerFromOpener() {
+    try {
+        if (window.opener && typeof window.opener.tipoEjer !== 'undefined') {
+            window.tipoEjer = window.opener.tipoEjer;
+            console.log("Exercise type synced from parent:", window.tipoEjer);
         }
+    } catch (e) {
+        window.tipoEjer = 'desconocido';
     }
+}
+
+// --- Patch HS.Expander for dynamic tipoEjer update and CSS ---
+function patchExpander() {
+    if (typeof hs !== 'undefined' && hs.Expander && hs.Expander.prototype) {
+        const originalOnAfterExpand = hs.Expander.prototype.onAfterExpand;
+        hs.Expander.prototype.onAfterExpand = function () {
+            var src = this.src;
+            var filename = src.split('/').pop();
+            try {
+                let ejercicio = scoEjerciciosTipo.find(ejer => ejer.url === filename);
+                let tipoEjer = ejercicio ? ejercicio.tipo : 'desconocido';
+                window.tipoEjer = tipoEjer;
+                console.log(tipoEjer);
+
+                if (tipoEjer === "generico" || tipoEjer === "pilas") {
+                    let iframeDoc = this.iframe.contentDocument || this.iframe.contentWindow.document;
+                    let linkCSS = iframeDoc.querySelector('link[href="resources/ejercicioshtml.css"]');
+                    if (linkCSS) {
+                        linkCSS.href = "resources/ejercicioshtmlv0.css";
+                    }
+                }
+            } catch (error) {
+                window.tipoEjer = 'desconocido';
+            }
+            if (typeof originalOnAfterExpand === 'function') {
+                originalOnAfterExpand.apply(this, arguments);
+            }
+        };
+    }
+}
+
+// --- Global initialization ---
+(function initAll() {
+    syncTipoEjerFromOpener();
+    patchExpander();
+    initTracking();
 })();
 
 // ALL INTEGRED BY CORAL
