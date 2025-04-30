@@ -1,13 +1,13 @@
 import { initTracking } from './modules/scorm-events';
 import { logElementAction } from './modules/scorm/logElementAction';
-// ... importar otras funciones segun sea necesario ...
+// ... importar otras funciones según sea necesario ...
 
 console.log("////////// SCORM WORKER INITIALIZED //////////");
 
 // --- Initialize all modules ---
 function initializeModules(): void {
   initTracking();
-  // Llamar a otras funciones o inicializaciones segun sea necesario
+  // Llamar a otras funciones o inicializaciones según sea necesario
 }
 
 // --- Start the application ---
