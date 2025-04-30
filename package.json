@@ -15,9 +15,12 @@
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "grommet": "^2.46.1",
+    "grommet-icons": "^4.12.4",
     "mongoose": "^8.13.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "styled-components": "^6.1.17"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
