@@ -1,6 +1,6 @@
-import { Grommet, Box } from 'grommet';
+import { Grommet } from 'grommet';
 import { Header } from './components/Header';
-import { Main } from './components/main';
+import { Main } from './components/Main';
 import { Footer } from './components/Footer';
 import { AboutUs } from './components/AboutUs';
 

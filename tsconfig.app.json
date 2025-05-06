@@ -20,5 +20,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src", "public/worker/scormWorker.js", "public/worker/scorm-events.js", "public/worker/logElementAction.js", "public/worker/getParentStructure.js", "public/worker/getDataAttributes.js", "public/worker/updateTipoEjerOnClick.js"]
 }

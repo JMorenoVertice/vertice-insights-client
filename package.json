@@ -10,14 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "bcrypt": "^5.1.1",
-    "bcryptjs": "^3.0.2",
-    "body-parser": "^2.2.0",
-    "cors": "^2.8.5",
-    "express": "^4.21.2",
     "grommet": "^2.46.1",
     "grommet-icons": "^4.12.4",
-    "mongoose": "^8.13.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "styled-components": "^6.1.17"
@@ -36,10 +30,11 @@
     "globals": "^15.9.0",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.0.1",
-    "vite": "^5.4.16"
+    "vite": "^5.4.16",
+    "vite-plugin-static-copy": "^2.3.1"
   },
   "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
-  "main": "eslint.config.js",
+  "main": "src/main.tsx",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JMorenoVertice/vertice-insights-client.git"
