@@ -1,43 +1,20 @@
 import { Box, Text } from 'grommet';
 
 export const AboutUs = () => (
-    <Box
-        align="center"
-        justify="center"
-        pad={{ vertical: 'xlarge', horizontal: 'medium' }}
-        width="100%"
-    >
-        <Box
-            background="black"
-            round="xlarge"
-            pad={{ vertical: 'large', horizontal: 'large' }}
-            align="center"
-            width={{ max: '700px' }}
-            elevation="large"
-            style={{
-                boxShadow: '0 4px 32px 0 rgba(31, 38, 135, 0.18)',
-            }}
-        >
-            <Text
-                color="white"
-                weight="bold"
-                size="xxlarge"
-                textAlign="center"
-                margin={{ bottom: 'small' }}
-                style={{ letterSpacing: '1px' }}
-            >
-                Sobre la elección del diseño:
-            </Text>
-            <Text
-                color="white"
-                size="large"
-                textAlign="center"
-                style={{ opacity: 0.85, lineHeight: 1.6 }}
-            >
-                He diseñado esta landing page utilizando componentes React de manera óptima y reutilizable, asegurando un código limpio, modular y fácil de mantener.
-                Cada sección está construida con bloques independientes que facilitan la escalabilidad y la personalización, permitiendo una experiencia de usuario fluida y consistente a lo largo de toda la página.
-                Hecho por Coral Jácome.
-            </Text>
-        </Box>
-    </Box>
+  <Box pad="large" align="center" margin={{ top: 'large' }} gap="medium">
+    <Text size="xxlarge" color="white" weight="bold" margin={{ bottom: 'small' }}>
+      Sobre el Proyecto
+    </Text>
+    <Text color="white" size="large" style={{ maxWidth: 700 }}>
+      Este proyecto se centra en el desarrollo de un script diseñado para integrarse con cursos SCORM y ampliar significativamente las capacidades de seguimiento de interacción del usuario.
+      <br /><br />
+      Mientras que los estándares SCORM tradicionales permiten registrar datos básicos como progreso y puntuaciones, nuestro script captura eventos detallados de usuario, tales como clicks y movimientos de scroll dentro del contenido del curso. Esta información se almacena de manera eficiente en la base de datos (Kafka) utilizando los canales estándar de SCORM, garantizando compatibilidad y facilidad de integración.
+      <br /><br />
+      El análisis de estos datos permite obtener estadísticas precisas y valiosas sobre cómo los estudiantes interactúan con los cursos, facilitando la toma de decisiones informadas para mejorar el diseño, la usabilidad y la efectividad de futuros contenidos educativos.
+      <br /><br />
+      Conscientes de las limitaciones técnicas de almacenamiento en SCORM, nuestro enfoque incluye técnicas para optimizar y comprimir la información recopilada, asegurando un rendimiento óptimo sin comprometer la calidad del seguimiento.
+      <br /><br />
+      En resumen, el script <Text color="coral" size="large">scorm-worker.js</Text> representa un avance significativo en el seguimiento y análisis de la experiencia de aprendizaje digital, proporcionando a desarrolladores y educadores herramientas para crear cursos más adaptados y efectivos.
+    </Text>
+  </Box>
 );

@@ -1,1 +1,1 @@
-{"root":["./src/app.tsx","./src/main.tsx","./src/scormworker.tsx","./src/vite-env.d.ts"],"version":"5.8.2"}
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/aboutus.tsx","./src/components/apptext.tsx","./src/components/arrownavigation.tsx","./src/components/boxcard.tsx","./src/components/card.tsx","./src/components/footer.tsx","./src/components/header.tsx","./src/components/main.tsx"],"version":"5.8.2"}
