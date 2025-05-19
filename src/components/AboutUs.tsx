@@ -1,20 +1,34 @@
-import { Box, Text } from 'grommet';
+import React from 'react';
 
 export const AboutUs = () => (
-  <Box pad="large" align="center" margin={{ top: 'large' }} gap="medium">
-    <Text size="xxlarge" color="white" weight="bold" margin={{ bottom: 'small' }}>
-      About the Project
-    </Text>
-    <Text color="white" size="large" style={{ maxWidth: 700 }}>
-      This project focuses on the development of a script designed to integrate with SCORM courses and significantly expand user interaction tracking capabilities.
+  <div
+    style={{
+      padding: '2.5rem',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginTop: '2.5rem',
+      gap: '1.5rem',
+    }}
+  >
+    <p
+      style={{
+        color: 'white',
+        fontSize: '1.25em',
+        maxWidth: 700,
+        textAlign: 'center',
+        lineHeight: 1.7,
+      }}
+    >
+      Este proyecto se centra en el desarrollo de un script diseñado para integrarse con cursos SCORM y ampliar significativamente las capacidades de seguimiento de interacción del usuario.
       <br /><br />
-      While traditional SCORM standards allow the recording of basic data such as progress and scores, our script captures detailed user events, such as clicks and scroll movements within the course content. This information is efficiently stored in the database (Kafka) using standard SCORM channels, ensuring compatibility and ease of integration.
+      Mientras que los estándares SCORM tradicionales permiten registrar datos básicos como progreso y puntuaciones, nuestro script captura eventos detallados de usuario, tales como clicks y movimientos de scroll dentro del contenido del curso. Esta información se almacena de manera eficiente en la base de datos (Kafka) utilizando los canales estándar de SCORM, garantizando compatibilidad y facilidad de integración.
       <br /><br />
-      The analysis of this data enables the extraction of accurate and valuable statistics on how students interact with courses, facilitating informed decision-making to improve the design, usability, and effectiveness of future educational content.
+      El análisis de estos datos permite obtener estadísticas precisas y valiosas sobre cómo los estudiantes interactúan con los cursos, facilitando la toma de decisiones informadas para mejorar el diseño, la usabilidad y la efectividad de futuros contenidos educativos.
       <br /><br />
-      Aware of the technical storage limitations in SCORM, our approach includes techniques to optimize and compress the collected information, ensuring optimal performance without compromising tracking quality.
+      Conscientes de las limitaciones técnicas de almacenamiento en SCORM, nuestro enfoque incluye técnicas para optimizar y comprimir la información recopilada, asegurando un rendimiento óptimo sin comprometer la calidad del seguimiento.
       <br /><br />
-      In summary, the <Text color="coral" size="large">scorm-worker.js</Text> script represents a significant advancement in tracking and analyzing the digital learning experience, providing developers and educators with tools to create more tailored and effective courses.
-    </Text>
-  </Box>
+      En resumen, el script <span style={{ color: 'coral', fontWeight: 'bold' }}>scorm-worker.js</span> representa un avance significativo en el seguimiento y análisis de la experiencia de aprendizaje digital, proporcionando a desarrolladores y educadores herramientas para crear cursos más adaptados y efectivos.
+    </p>
+  </div>
 );

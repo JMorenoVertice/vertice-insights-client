@@ -1,6 +1,9 @@
 // src/App.tsx
 import React, { useEffect, useState, useCallback } from 'react';
 import './App.css';  // Importa el archivo CSS para los estilos
+import { Main } from './components/Main';
+import { AboutUs } from './components/AboutUs';
+import { Welcome } from './components/Welcome';
 
 // Definir tipo para las métricas
 interface Metric {
@@ -76,7 +79,7 @@ const App = () => {
     <div onClick={handleClick}>
       <header>
         <h1>SCORM Analytics</h1>
-        <p>Soluciones inteligentes para el aprendizaje personalizado</p>
+        <Welcome/>
       </header>
 
       <div className="container">
@@ -89,28 +92,12 @@ const App = () => {
 
         <section className="section">
           <h2>¿Qué medimos?</h2>
-          <div className="metrics-grid">
-            {metrics.map((metric, index) => (
-              <div key={index} className="metric-box" onClick={toggleExtraInfo}>
-                <div className="metric-box-inner">
-                  <div className="metric-box-front">
-                    <h3>{metric.title}</h3>
-                    <p>{metric.front}</p>
-                  </div>
-                  <div className="metric-box-back">
-                    <p>{metric.back}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <Main/>
         </section>
 
         <section className="section why-choose-us">
           <h2>¿Por qué elegirnos?</h2>
-          <p>
-            Nuestra tecnología convierte datos en conocimiento útil, permitiendo una formación más eficaz, personalizada y orientada a resultados.
-          </p>
+          <AboutUs/>
           <button onClick={handleRequestInfo}>
             Solicitar más información
           </button>
