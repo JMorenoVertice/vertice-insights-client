@@ -15,6 +15,6 @@ export const CoralDev = () => (
       minHeight: '120px',
     }}
   >
-    <Text color="white"> Welcome! ✨</Text>
+    <Text color="white"> Bienvenid@! ✨</Text>
   </Box>
 );

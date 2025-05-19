@@ -31,7 +31,6 @@ function App() {
           flexDirection: 'column',
         }}
       >
-        <Header />
         <CoralDev />
         <Box flex="grow" width="100%">
           <Main />
