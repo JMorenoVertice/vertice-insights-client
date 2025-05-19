@@ -1,54 +1,3 @@
-<<<<<<< HEAD
-{
-  "name": "vite-react",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "grommet": "^2.46.1",
-    "grommet-icons": "^4.12.4",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "styled-components": "^6.1.17"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.9.0",
-    "@types/bcrypt": "^5.0.2",
-    "@types/bcryptjs": "^2.4.6",
-    "@types/node": "^22.13.15",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.4",
-    "eslint": "^9.9.0",
-    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
-    "eslint-plugin-react-refresh": "^0.4.9",
-    "globals": "^15.9.0",
-    "typescript": "^5.8.2",
-    "typescript-eslint": "^8.0.1",
-    "vite": "^5.4.16",
-    "vite-plugin-static-copy": "^2.3.1"
-  },
-  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
-  "main": "src/main.tsx",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/JMorenoVertice/vertice-insights-client.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/JMorenoVertice/vertice-insights-client/issues"
-  },
-  "homepage": "https://github.com/JMorenoVertice/vertice-insights-client#readme"
-}
-=======
 {
   "name": "vite-react",
   "private": true,
@@ -82,5 +31,3 @@
     "vite": "^5.4.1"
   }
 }
-
->>>>>>> 35c9b5f292afb60d8d4566794280902d04c5d839
