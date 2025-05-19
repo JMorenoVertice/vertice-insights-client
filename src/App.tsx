@@ -110,7 +110,6 @@ const App = () => {
 
       <header>
         <h1>SCORM Analytics</h1>
-        <Welcome />
       </header>
 
       <div className="container">

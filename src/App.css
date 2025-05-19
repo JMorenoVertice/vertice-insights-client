@@ -8,8 +8,8 @@
   --color-accent-hover: #a259f7;
   --color-text-main: #e0e0e0;
   --color-text-dark: #222;
-  --color-button: #57b9c6;
-  --color-button-hover: #008c99;
+  --color-button: #c653e0;
+  --color-button-hover: #a142b7;
   --color-footer-bg: #23233a;
   --color-welcome-bg: #6200c5;
   --color-welcome-border: #001d4a;
@@ -32,10 +32,10 @@
   --color-card-border: #a259e6;
   --color-accent: #a259e6;
   --color-accent-hover: #7c3aed;
-  --color-text-main: #000000;          
+  --color-text-main: #000000;
   --color-text-dark: #444;
-  --color-button: #57b9c6;
-  --color-button-hover: #008c99;
+  --color-button: #c653e0;
+  --color-button-hover: #a142b7;
   --color-footer-bg: #ffffff;
   --color-welcome-bg: #505050;
   --color-welcome-border: #a259e6;
@@ -107,7 +107,7 @@ h1 {
   padding: 0.6em;
   box-shadow: var(--shadow-main);
   cursor: pointer;
-  transition: 
+  transition:
     background 0.25s,
     border-color 0.25s,
     box-shadow 0.25s,
@@ -138,6 +138,7 @@ h1 {
     padding: 0.45em;
   }
 }
+
 /* Light mode styles */
 .light-mode .toggle-mode-btn {
   background: #f6f7fa;
@@ -271,7 +272,13 @@ h1 {
   text-align: center;
   margin-bottom: var(--spacing-sm);
   line-height: 1.7;
+  max-width: 750px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
 }
+
 
 /* Section button style */
 .section button {
@@ -353,7 +360,7 @@ h1 {
 }
 
 .aboutus-box span {
-  color: coral;
+  color: var(--color-text-main);
   font-weight: bold;
 }
 
