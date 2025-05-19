@@ -269,7 +269,7 @@ h1 {
 .section p {
   color: var(--color-text-main);
   font-size: 1.1em;
-  text-align: center;
+  text-align: left;
   margin-bottom: var(--spacing-sm);
   line-height: 1.7;
   max-width: 750px;
@@ -339,7 +339,7 @@ h1 {
 .card p {
   color: var(--color-text-main);
   font-size: 1em;
-  text-align: center;
+  text-align: left;
 }
 
 /* AboutUs box style */
@@ -381,7 +381,7 @@ h1 {
 .why-choose-us p {
   color: var(--color-text-main);
   font-size: 1.1em;
-  text-align: center;
+  text-align: left;
   margin-bottom: var(--spacing-sm);
   line-height: 1.7;
 }
