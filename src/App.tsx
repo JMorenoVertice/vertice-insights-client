@@ -14,6 +14,7 @@ interface Metric {
 
 const App = () => {
   const [startTime] = useState<number>(Date.now());
+  const [darkMode, setDarkMode] = useState<boolean>(true);
 
   // Manejo del tiempo en pantalla
   useEffect(() => {
@@ -36,7 +37,7 @@ const App = () => {
     e.currentTarget.classList.toggle('open');
   };
 
-  // Lista de métricas
+  // Lista de métricas (no usada en este archivo, pero puedes pasarla a Main si lo necesitas)
   const metrics: Metric[] = [
     {
       title: 'getDataAttributes',
@@ -75,11 +76,41 @@ const App = () => {
     alert('Gracias por tu interés. Te contactaremos pronto.');
   };
 
+  // Alternar modo claro/oscuro
+  const toggleDarkMode = () => setDarkMode((prev) => !prev);
+
   return (
-    <div onClick={handleClick}>
+    <div
+      onClick={handleClick}
+      className={darkMode ? 'dark-mode' : 'light-mode'}
+      style={{ minHeight: '100vh' }}
+    >
+      {/* Botón de modo claro/oscuro */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleDarkMode();
+        }}
+        className="toggle-mode-btn top-right"
+        aria-label="Alternar modo claro/oscuro"
+      >
+        {darkMode ? (
+          // Luna (modo oscuro)
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a259e6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79z"/>
+          </svg>
+        ) : (
+          // Sol (modo claro)
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a259e6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+        )}
+      </button>
+
       <header>
         <h1>SCORM Analytics</h1>
-        <Welcome/>
+        <Welcome />
       </header>
 
       <div className="container">
@@ -92,12 +123,12 @@ const App = () => {
 
         <section className="section">
           <h2>¿Qué medimos?</h2>
-          <Main/>
+          <Main />
         </section>
 
         <section className="section why-choose-us">
           <h2>¿Por qué elegirnos?</h2>
-          <AboutUs/>
+          <AboutUs />
           <button onClick={handleRequestInfo}>
             Solicitar más información
           </button>

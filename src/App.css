@@ -1,4 +1,5 @@
-:root {
+:root,
+.dark-mode {
   --color-background: #121212;
   --color-header: #1f2631;
   --color-card-bg: #23233a;
@@ -7,8 +8,8 @@
   --color-accent-hover: #a259f7;
   --color-text-main: #e0e0e0;
   --color-text-dark: #222;
-  --color-button: #c653e0;
-  --color-button-hover: #8f3da2;
+  --color-button: #57b9c6;
+  --color-button-hover: #008c99;
   --color-footer-bg: #23233a;
   --color-welcome-bg: #6200c5;
   --color-welcome-border: #001d4a;
@@ -23,6 +24,23 @@
   --spacing-md: 1.5rem;
   --spacing-sm: 0.8rem;
 }
+
+.light-mode {
+  --color-background: #fffffff6;
+  --color-header: #ffffff;
+  --color-card-bg: #fff;
+  --color-card-border: #a259e6;
+  --color-accent: #a259e6;
+  --color-accent-hover: #7c3aed;
+  --color-text-main: #000000;          
+  --color-text-dark: #444;
+  --color-button: #57b9c6;
+  --color-button-hover: #008c99;
+  --color-footer-bg: #ffffff;
+  --color-welcome-bg: #505050;
+  --color-welcome-border: #a259e6;
+}
+
 
 /* Reset */
 * {
@@ -75,6 +93,64 @@ h1 {
   letter-spacing: 1px;
   font-family: var(--font-main);
 }
+
+/* Toggle mode button */
+.toggle-mode-btn {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
+  background: var(--color-card-bg);
+  border: 2px solid var(--color-card-border);
+  color: var(--color-accent);
+  border-radius: 50%;
+  padding: 0.6em;
+  box-shadow: var(--shadow-main);
+  cursor: pointer;
+  transition: 
+    background 0.25s,
+    border-color 0.25s,
+    box-shadow 0.25s,
+    color 0.25s,
+    transform 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-mode-btn:hover {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent-hover);
+  box-shadow: var(--shadow-hover);
+  transform: scale(1.07) rotate(-8deg);
+}
+
+.toggle-mode-btn svg {
+  display: block;
+  pointer-events: none;
+}
+
+@media (max-width: 600px) {
+  .toggle-mode-btn {
+    top: 1rem;
+    right: 1rem;
+    padding: 0.45em;
+  }
+}
+/* Light mode styles */
+.light-mode .toggle-mode-btn {
+  background: #f6f7fa;
+  border-color: var(--color-card-border);
+  color: var(--color-accent);
+}
+
+.light-mode .toggle-mode-btn:hover {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent-hover);
+}
+
 
 /* Search bar container */
 .main-container {
@@ -162,13 +238,14 @@ h1 {
 /* Main container */
 .container {
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
   padding: var(--spacing-lg) var(--spacing-md);
   display: flex;
   flex-direction: column;
   align-items: center;
   flex-grow: 1;
+  color: var(--color-text-main);
+  background: var(--color-background);
 }
 
 /* Section layout */
@@ -292,6 +369,14 @@ h1 {
 
 .why-choose-us h2 {
   color: var(--color-accent);
+}
+
+.why-choose-us p {
+  color: var(--color-text-main);
+  font-size: 1.1em;
+  text-align: center;
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.7;
 }
 
 /* Footer style */
